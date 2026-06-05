@@ -1,0 +1,1456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>NTC | Nexyond Training Club</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0A0C10;
+            color: #F0F3F8;
+            overflow-x: hidden;
+        }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #1E2A32; }
+        ::-webkit-scrollbar-thumb { background: #0ABAB5; border-radius: 10px; }
+
+        /* Loading overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0A0C10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s;
+        }
+        .loading-logo {
+            text-align: center;
+            animation: pulse 1.2s infinite;
+        }
+        .loading-logo img {
+            width: 80px;
+            filter: drop-shadow(0 0 12px #0ABAB5);
+        }
+        .loading-logo h2 {
+            color: #0ABAB5;
+            margin-top: 16px;
+            font-weight: 700;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.6; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .app {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* HEADER */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            background: rgba(10, 12, 16, 0.85);
+            backdrop-filter: blur(16px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(10,186,181,0.25);
+        }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo-img {
+            height: 44px;
+            filter: drop-shadow(0 0 6px rgba(10,186,181,0.5));
+        }
+        .logo-text h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #0ABAB5, #0A6E7A);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .logo-text a {
+    color: #8EA3B5;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.logo-text a:hover {
+    color: #0ABAB5;
+    text-decoration: underline;
+}
+        .nav-links {
+            display: flex;
+            gap: 24px;
+        }
+        .nav-link {
+            font-weight: 600;
+            cursor: pointer;
+            padding: 8px 0;
+            transition: 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link.active, .nav-link:hover {
+            border-bottom-color: #0ABAB5;
+            color: #0ABAB5;
+        }
+        /* Filter button left */
+        .filter-btn-left {
+            background: #1E2A32;
+            border: none;
+            color: #0ABAB5;
+            font-size: 1.4rem;
+            width: 44px;
+            height: 44px;
+            border-radius: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+        /* Main content */
+        .main-content {
+            padding: 20px 24px 80px;
+            min-height: 70vh;
+        }
+        /* Hero */
+        .hero {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .hero h1 {
+            font-size: 2.6rem;
+            background: linear-gradient(135deg, #FFF, #0ABAB5);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        /* Search & sort */
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .search-wrapper {
+            flex: 2;
+            position: relative;
+        }
+        .search-wrapper i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7A8EA0;
+        }
+        .search-input {
+            width: 100%;
+            padding: 14px 20px 14px 50px;
+            background: #1A222A;
+            border: 1px solid #2A3A44;
+            border-radius: 60px;
+            color: white;
+            font-size: 1rem;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: #0ABAB5;
+        }
+        .sort-select {
+            background: #1A222A;
+            border: 1px solid #2A3A44;
+            padding: 12px 20px;
+            border-radius: 40px;
+            color: white;
+            cursor: pointer;
+        }
+        /* Cards grid */
+        .exercises-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 28px;
+        }
+        .exercise-card {
+            background: #131A20;
+            border-radius: 28px;
+            overflow: hidden;
+            transition: 0.2s;
+            cursor: pointer;
+            border: 1px solid #222E36;
+        }
+        .exercise-card:hover {
+            transform: translateY(-5px);
+            border-color: #0ABAB5;
+        }
+        /* Slider container (manual only) */
+        .slider-container {
+            position: relative;
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+            background: #000;
+        }
+        .slider-images {
+            display: flex;
+            transition: transform 0.3s ease;
+            height: 100%;
+        }
+        .slider-img {
+            width: 100%;
+            flex-shrink: 0;
+            object-fit: cover;
+        }
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.6);
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 40px;
+            cursor: pointer;
+            z-index: 5;
+            font-size: 1rem;
+        }
+        .slider-prev { left: 8px; }
+        .slider-next { right: 8px; }
+        .card-info {
+            padding: 18px;
+        }
+        .exercise-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+        }
+        .meta-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 12px 0;
+        }
+        .meta-item {
+            background: #1A252E;
+            border-radius: 16px;
+            padding: 8px 10px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .meta-item i { width: 20px; color: #0ABAB5; }
+        .flame-level { display: flex; gap: 4px; }
+        .flame-level i { color: #FFB347; font-size: 0.8rem; }
+        .inactive-flame { opacity: 0.3; }
+        .add-queue-btn {
+            background: #0ABAB5;
+            border: none;
+            color: #0A0C10;
+            font-weight: bold;
+            padding: 8px 0;
+            border-radius: 40px;
+            width: 100%;
+            margin-top: 14px;
+            cursor: pointer;
+        }
+        /* Sidebar Filters */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 200;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.25s;
+        }
+        .sidebar-overlay.open { visibility: visible; opacity: 1; }
+        .filters-sidebar {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 320px;
+            height: 100%;
+            background: #0F151C;
+            backdrop-filter: blur(20px);
+            z-index: 201;
+            padding: 30px 24px;
+            transition: left 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            overflow-y: auto;
+            box-shadow: 5px 0 25px rgba(0,0,0,0.5);
+            border-right: 1px solid rgba(10,186,181,0.3);
+        }
+        .filters-sidebar.open { left: 0; }
+        .filter-group { margin-bottom: 28px; }
+        .filter-label { font-weight: 600; margin-bottom: 14px; font-size: 0.9rem; color: #CCDDEA; display: flex; align-items: center; gap: 8px; }
+        .filter-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+        .filter-chip {
+            background: #1E2A32;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+        .filter-chip.active { background: #0ABAB5; color: #0A0C10; }
+        .reset-filters { width: 100%; background: transparent; border: 1px solid #0ABAB5; color: #0ABAB5; padding: 12px; border-radius: 40px; margin-top: 20px; cursor: pointer; }
+
+        /* FLOATING CART BUTTON (bottom left) */
+        .cart-btn {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            background: #0ABAB5;
+            width: 56px;
+            height: 56px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 99;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #FF6A5C;
+            color: white;
+            border-radius: 30px;
+            font-size: 12px;
+            padding: 2px 8px;
+            font-weight: bold;
+        }
+
+        /* Cart Modal (Queue) */
+        .cart-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #0F151C;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 32px;
+            z-index: 300;
+            padding: 24px;
+            border: 1px solid #0ABAB5;
+            flex-direction: column;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .cart-modal.open { display: flex; }
+        .cart-modal-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .queue-item {
+            background: #1A252E;
+            border-radius: 40px;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .queue-item .drag-handle {
+            cursor: grab;
+            margin-right: 10px;
+            color: #0ABAB5;
+        }
+        .save-program-btn {
+            background: #0ABAB5;
+            border: none;
+            padding: 12px;
+            border-radius: 40px;
+            font-weight: bold;
+            margin-top: 16px;
+            width: 100%;
+            cursor: pointer;
+        }
+        /* MyNTC page */
+        .programs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 20px;
+        }
+        .program-card {
+            background: #131A20;
+            border-radius: 28px;
+            padding: 20px;
+            border: 1px solid #222E36;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .program-card:hover { border-color: #0ABAB5; transform: translateY(-4px); }
+        .program-title { font-weight: 700; font-size: 1.2rem; margin-bottom: 8px; }
+        .program-ex-count { font-size: 0.8rem; color: #8EA3B5; }
+        .program-detail-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #0F151C;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 32px;
+            z-index: 400;
+            padding: 24px;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 350;
+            display: none;
+        }
+        .backdrop.show { display: block; }
+        .program-detail-list .detail-item {
+            background: #1A252E;
+            border-radius: 40px;
+            padding: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .detail-order-handle {
+            cursor: grab;
+            color: #0ABAB5;
+            margin-right: 10px;
+        }
+        .hidden { display: none; }
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0ABAB5;
+            color: #0A0C10;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: bold;
+            z-index: 500;
+        }
+        footer { text-align: center; padding: 30px; color: #6A7F8F; border-top: 1px solid #1F2E38; margin-top: 40px; }
+        @media (max-width: 700px) {
+            .main-content { padding: 16px; }
+            .hero h1 { font-size: 1.8rem; }
+        }
+        /* MyNTC Program Cards (büyük kart) */
+.program-large-card {
+    background: #131A20;
+    border-radius: 32px;
+    overflow: hidden;
+    margin-bottom: 24px;
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s;
+    border: 1px solid #222E36;
+}
+.program-large-card:hover {
+    transform: translateY(-6px);
+    border-color: #0ABAB5;
+}
+.program-card-img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    background: #1A252E;
+}
+.program-card-info {
+    padding: 20px;
+}
+.program-card-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+.program-card-count {
+    font-size: 0.85rem;
+    color: #8EA3B5;
+}
+
+/* Program Detail View */
+.program-detail-view {
+    animation: fadeIn 0.2s ease;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #1E2A32;
+    border: none;
+    color: #0ABAB5;
+    padding: 10px 20px;
+    border-radius: 40px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.back-button:hover {
+    background: #2A3A44;
+}
+.exercise-detail-item {
+    background: #131A20;
+    border-radius: 28px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #222E36;
+}
+.exercise-detail-img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+}
+.exercise-detail-info {
+    padding: 16px;
+}
+.exercise-detail-name {
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+}
+.exercise-detail-muscle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: #0ABAB5;
+    margin-bottom: 8px;
+}
+.exercise-detail-equipment {
+    font-size: 0.75rem;
+    color: #8EA3B5;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+@media (min-width: 768px) {
+    .exercise-detail-item {
+        flex-direction: row;
+    }
+    .exercise-detail-img {
+        width: 140px;
+        aspect-ratio: 1 / 1;
+    }
+    .exercise-detail-info {
+        flex: 1;
+    }
+}
+/* Program card actions */
+.program-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+}
+.program-actions button {
+    background: #1E2A32;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 40px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.program-actions .edit-btn {
+    color: #0ABAB5;
+}
+.program-actions .delete-btn {
+    color: #FF6A5C;
+}
+.program-actions button:hover {
+    background: #2A3A44;
+}
+/* Edit program view */
+.edit-program-view {
+    animation: fadeIn 0.2s ease;
+}
+.edit-program-name {
+    width: 100%;
+    padding: 14px 18px;
+    background: #1A222A;
+    border: 1px solid #2A3A44;
+    border-radius: 60px;
+    color: white;
+    font-size: 1.1rem;
+    margin: 20px 0;
+}
+.exercise-add-section {
+    margin: 24px 0;
+    padding: 20px;
+    background: #0F151C;
+    border-radius: 32px;
+}
+.search-add-wrapper {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+.search-add-wrapper input {
+    flex: 1;
+    padding: 12px 18px;
+    background: #1A222A;
+    border: 1px solid #2A3A44;
+    border-radius: 60px;
+    color: white;
+}
+.search-add-wrapper button {
+    background: #0ABAB5;
+    border: none;
+    padding: 0 20px;
+    border-radius: 60px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.search-results-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+.search-result-item {
+    background: #1A252E;
+    border-radius: 40px;
+    padding: 10px 16px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+.search-result-item:hover {
+    background: #2A3A44;
+}
+.add-exercise-btn {
+    background: #0ABAB5;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 40px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.edit-exercise-list .edit-exercise-item {
+    background: #1A252E;
+    border-radius: 40px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.edit-exercise-name {
+    font-weight: 500;
+    cursor: pointer;
+}
+.edit-exercise-name:hover {
+    color: #0ABAB5;
+}
+.remove-exercise-btn {
+    color: #FF6A5C;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+}
+    </style>
+</head>
+<body>
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-logo">
+        <img src="data/logo.png" alt="NTC" onerror="this.src='https://placehold.co/80x80/0ABAB5/FFF?text=NTC'">
+        <h2>NTC</h2>
+        <p>loading elite database...</p>
+    </div>
+</div>
+
+<div class="app">
+    <div class="navbar">
+        <div class="logo-area">
+            <img src="data/logo.png" alt="NTC" class="logo-img" onerror="this.src='https://placehold.co/44x44/0ABAB5/FFF?text=NTC'">
+            <div class="logo-text">
+                <h2>NexTrainClub</h2>
+                <p><a href="https://nexyond.vercel.app" target="_blank" class="footer-link">by Nexyond Digital Solutions</a></p>
+            </div>
+        </div>
+        <div class="nav-links">
+            <div class="nav-link active" data-page="home">Home</div>
+            <div class="nav-link" data-page="myntc">MyNTC</div>
+        </div>
+        <button class="filter-btn-left" id="filterBtnLeft"><i class="fas fa-sliders-h"></i></button>
+    </div>
+    <div class="main-content" id="mainContent"></div>
+    <footer><i class="fas fa-copyright"></i> NTC — Nexyond Training Club</footer>
+</div>
+
+<!-- Floating Cart Button -->
+<div class="cart-btn" id="cartBtn">
+    <i class="fas fa-bolt"></i>
+    <span class="cart-count" id="cartCount">0</span>
+</div>
+
+<!-- Cart Modal (Queue) -->
+<div class="cart-modal" id="cartModal">
+    <div class="cart-modal-header">
+        <h3>Workout Queue</h3>
+        <i class="fas fa-times" id="closeCartModal" style="cursor:pointer; font-size:1.4rem;"></i>
+    </div>
+    <div id="queueList"></div>
+    <input type="text" id="programNameInput" placeholder="Program name" style="background:#1A222A; border:1px solid #2A3A44; padding:12px; border-radius:40px; margin:12px 0; color:white;">
+    <button class="save-program-btn" id="saveProgramBtn">Save as Program</button>
+</div>
+
+<!-- Backdrop for modals -->
+<div class="backdrop" id="backdrop"></div>
+
+<script>
+    const JSON_URL = 'data/exercises.json';
+    const IMAGE_BASE = 'exercises/';
+    let allExercises = [];
+    // Filters
+    let currentMuscle = 'all';
+    let currentEquipment = 'all';
+    let currentLevel = 'all';
+    let searchTerm = '';
+    let sortType = 'name-asc';
+    // Workout queue (temporary before saving)
+    let queue = []; // array of exercise objects
+    // Saved programs
+    let savedPrograms = []; // each { id, name, exercises: [ {id, name, image, target} ] }
+
+    // Helper functions
+    function capitalize(str) { if(!str) return ''; return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase(); }
+    function normalizeEquipment(equip) { if(!equip) return 'Body only'; if(equip.toLowerCase() === 'body only') return 'Body only'; return equip.split(' ').map(capitalize).join(' '); }
+    function getFlameIcons(level) {
+        let active = level === 'beginner' ? 1 : (level === 'intermediate' ? 2 : (level === 'expert' ? 3 : 0));
+        let html = '';
+        for(let i=1;i<=3;i++) html += `<i class="fas fa-fire ${i <= active ? '' : 'inactive-flame'}"></i>`;
+        return html;
+    }
+    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+
+    // Load saved programs from localStorage
+    function loadSavedPrograms() {
+        const stored = localStorage.getItem('ntc_programs');
+        if(stored) { try { savedPrograms = JSON.parse(stored); } catch(e){} }
+        else savedPrograms = [];
+    }
+    function saveProgramsToLocal() {
+        localStorage.setItem('ntc_programs', JSON.stringify(savedPrograms));
+    }
+    // Update cart count badge
+    function updateCartBadge() { document.getElementById('cartCount').innerText = queue.length; }
+
+    // Add to queue
+    function addToQueue(ex) {
+        if(queue.find(q => q.id === ex.id)) return;
+        queue.push({ id: ex.id, name: ex.name, image: ex.images?.[0] || null, target: ex.primaryMuscles?.[0] || 'General' });
+        updateCartBadge();
+        renderQueueModal();
+        showToast(`${ex.name} added to queue`);
+    }
+    function removeFromQueue(idx) { queue.splice(idx,1); updateCartBadge(); renderQueueModal(); }
+    function moveQueueItem(from, to) { if(to<0 || to>=queue.length) return; const item = queue.splice(from,1)[0]; queue.splice(to,0,item); renderQueueModal(); }
+    function renderQueueModal() {
+        const container = document.getElementById('queueList');
+        if(!container) return;
+        if(queue.length === 0) { container.innerHTML = '<div style="color:#8EA3B5; text-align:center;">No exercises added yet. Tap + on cards.</div>'; return; }
+        container.innerHTML = queue.map((ex, idx) => `
+            <div class="queue-item" draggable="true" data-idx="${idx}">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <i class="fas fa-grip-vertical drag-handle" style="cursor:grab;"></i>
+                    <span>${escapeHtml(ex.name)}</span>
+                </div>
+                <i class="fas fa-trash-alt" style="color:#FF6A5C; cursor:pointer;" data-remove="${idx}"></i>
+            </div>
+        `).join('');
+        // attach remove events
+        document.querySelectorAll('[data-remove]').forEach(el => {
+            el.addEventListener('click', (e) => { const idx = parseInt(el.getAttribute('data-remove')); removeFromQueue(idx); });
+        });
+        // drag and drop reorder
+        let dragSrc = null;
+        const items = document.querySelectorAll('.queue-item');
+        items.forEach(item => {
+            item.setAttribute('draggable', 'true');
+            item.addEventListener('dragstart', (e) => { dragSrc = parseInt(item.getAttribute('data-idx')); e.dataTransfer.effectAllowed = 'move'; });
+            item.addEventListener('dragover', (e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; });
+            item.addEventListener('drop', (e) => { e.preventDefault(); const targetIdx = parseInt(item.getAttribute('data-idx')); if(dragSrc !== null && dragSrc !== targetIdx) moveQueueItem(dragSrc, targetIdx); });
+        });
+    }
+
+    function saveCurrentQueueAsProgram() {
+        const nameInput = document.getElementById('programNameInput');
+        let programName = nameInput.value.trim();
+        if(!programName) { showToast('Please enter program name'); return; }
+        if(queue.length === 0) { showToast('Queue is empty'); return; }
+        const newProgram = {
+            id: Date.now().toString(),
+            name: programName,
+            exercises: [...queue]
+        };
+        savedPrograms.push(newProgram);
+        saveProgramsToLocal();
+        queue = [];
+        updateCartBadge();
+        renderQueueModal();
+        document.getElementById('cartModal').classList.remove('open');
+        document.getElementById('backdrop').classList.remove('show');
+        nameInput.value = '';
+        showToast(`Program "${programName}" saved!`);
+        if(document.querySelector('.nav-link[data-page="myntc"].active')) renderMyNTC();
+    }
+
+    function renderMyNTC() {
+        const container = document.getElementById('mainContent');
+        if(!container) return;
+        if(savedPrograms.length === 0) {
+            container.innerHTML = `<div style="text-align:center; padding:60px;"><i class="fas fa-dumbbell" style="font-size:3rem; color:#0ABAB5;"></i><p style="margin-top:20px;">No programs yet. Create your first workout from Home page.</p></div>`;
+            return;
+        }
+        let html = `<div class="programs-list">`;
+        savedPrograms.forEach(prog => {
+            // İlk egzersizin ilk resmini bul
+            let firstImage = '';
+            if(prog.exercises && prog.exercises.length > 0 && prog.exercises[0].image) {
+                firstImage = `${IMAGE_BASE}${prog.exercises[0].image}`;
+            } else {
+                firstImage = 'https://placehold.co/800x450/1E2A32/0ABAB5?text=NTC';
+            }
+            html += `
+                <div class="program-large-card" data-prog-id="${prog.id}">
+                    <img class="program-card-img" src="${firstImage}" onerror="...">
+                    <div class="program-card-info">
+                        <div class="program-card-title">${escapeHtml(prog.name)}</div>
+                        <div class="program-card-count"><i class="fas fa-list-ol"></i> ${prog.exercises.length} exercises</div>
+                        <div class="program-actions">
+                            <button class="edit-btn" data-id="${prog.id}"><i class="fas fa-pen"></i> Edit</button>
+                            <button class="delete-btn" data-id="${prog.id}"><i class="fas fa-trash"></i> Delete</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        html += `</div>`;
+        container.innerHTML = html;
+        document.querySelectorAll('.program-large-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const id = card.getAttribute('data-prog-id');
+                const program = savedPrograms.find(p => p.id === id);
+                if(program) showProgramDetailView(program);
+            });
+        });
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const id = btn.getAttribute('data-id');
+                const program = savedPrograms.find(p => p.id === id);
+                if(program) editProgram(program);
+            });
+        });
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const id = btn.getAttribute('data-id');
+                if(confirm('Delete this program?')) {
+                    savedPrograms = savedPrograms.filter(p => p.id !== id);
+                    saveProgramsToLocal();
+                    renderMyNTC();
+                    showToast('Program deleted');
+                }
+            });
+        });
+    }
+
+    function editProgram(program) {
+    const container = document.getElementById('mainContent');
+    let searchTermEdit = '';
+    let searchResults = [];
+    
+    const renderEditView = () => {
+        let exercisesListHtml = '';
+        program.exercises.forEach((ex, idx) => {
+            let imgUrl = ex.image ? `${IMAGE_BASE}${ex.image}` : '';
+            exercisesListHtml += `
+                <div class="edit-exercise-item">
+                    <div class="edit-exercise-name" data-ex-idx="${idx}">${escapeHtml(ex.name)}</div>
+                    <button class="remove-exercise-btn" data-remove-idx="${idx}"><i class="fas fa-trash-alt"></i></button>
+                </div>
+            `;
+        });
+        
+        let searchResultsHtml = '';
+        if(searchTermEdit.trim()) {
+            const filtered = allExercises.filter(ex => 
+                ex.name.toLowerCase().includes(searchTermEdit.toLowerCase()) &&
+                !program.exercises.some(pe => pe.id === ex.id)
+            ).slice(0, 10);
+            if(filtered.length) {
+                searchResultsHtml = `<div class="search-results-list">`;
+                filtered.forEach(ex => {
+                    searchResultsHtml += `
+                        <div class="search-result-item" data-add-id="${ex.id}">
+                            <span>${escapeHtml(ex.name)}</span>
+                            <button class="add-exercise-btn">Add</button>
+                        </div>
+                    `;
+                });
+                searchResultsHtml += `</div>`;
+            } else {
+                searchResultsHtml = `<div style="color:#8EA3B5; text-align:center;">No exercises found</div>`;
+            }
+        }
+        
+        const html = `
+            <div class="edit-program-view">
+                <button class="back-button" id="backFromEditBtn"><i class="fas fa-arrow-left"></i> Back to My Programs</button>
+                <h2>Edit Program</h2>
+                <input type="text" id="editProgramName" class="edit-program-name" value="${escapeHtml(program.name)}" placeholder="Program name">
+                <div class="exercise-add-section">
+                    <h3>Add Exercises</h3>
+                    <div class="search-add-wrapper">
+                        <input type="text" id="editSearchInput" placeholder="Search exercises..." value="${escapeHtml(searchTermEdit)}">
+                        <button id="editSearchBtn">Search</button>
+                    </div>
+                    <div id="editSearchResults">${searchResultsHtml}</div>
+                </div>
+                <h3>Exercises in this program</h3>
+                <div class="edit-exercise-list" id="editExercisesList">${exercisesListHtml}</div>
+                <button id="saveProgramChangesBtn" style="background:#0ABAB5; border:none; padding:14px; border-radius:40px; width:100%; margin-top:24px; font-weight:bold;">Save Changes</button>
+            </div>
+        `;
+        container.innerHTML = html;
+        
+        // Event listeners for edit view
+        document.getElementById('backFromEditBtn').addEventListener('click', () => renderMyNTC());
+        document.getElementById('editProgramName').addEventListener('change', (e) => { program.name = e.target.value; });
+        const searchInput = document.getElementById('editSearchInput');
+        const searchBtn = document.getElementById('editSearchBtn');
+        const updateSearch = () => {
+            searchTermEdit = searchInput.value;
+            renderEditView();
+        };
+        searchBtn.addEventListener('click', updateSearch);
+        searchInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') updateSearch(); });
+        
+        // Add exercise from search results
+        document.querySelectorAll('.search-result-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                if(e.target.classList.contains('add-exercise-btn')) {
+                    const id = item.getAttribute('data-add-id');
+                    const exercise = allExercises.find(ex => ex.id === id);
+                    if(exercise && !program.exercises.find(pe => pe.id === exercise.id)) {
+                        program.exercises.push({
+                            id: exercise.id,
+                            name: exercise.name,
+                            image: exercise.images?.[0] || null,
+                            target: exercise.primaryMuscles?.[0] || 'General'
+                        });
+                        saveProgramsToLocal();
+                        renderEditView();
+                        showToast(`${exercise.name} added`);
+                    }
+                }
+            });
+        });
+        
+        // Remove exercise from program
+        document.querySelectorAll('.remove-exercise-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const idx = parseInt(btn.getAttribute('data-remove-idx'));
+                program.exercises.splice(idx, 1);
+                saveProgramsToLocal();
+                renderEditView();
+                showToast('Exercise removed');
+            });
+        });
+        
+        // Click on exercise name to open detail modal
+        document.querySelectorAll('.edit-exercise-name').forEach(nameEl => {
+            nameEl.addEventListener('click', (e) => {
+                const idx = parseInt(nameEl.getAttribute('data-ex-idx'));
+                const ex = program.exercises[idx];
+                // Find full exercise data from allExercises
+                const fullEx = allExercises.find(e => e.id === ex.id);
+                if(fullEx) simpleDetailModal(fullEx);
+                else {
+                    // Fallback
+                    const fakeEx = { ...ex, primaryMuscles: [ex.target], secondaryMuscles: [], equipment: 'Body only', level: 'beginner', instructions: [] };
+                    simpleDetailModal(fakeEx);
+                }
+            });
+        });
+        
+        document.getElementById('saveProgramChangesBtn').addEventListener('click', () => {
+            saveProgramsToLocal();
+            showToast('Program saved');
+            renderMyNTC();
+        });
+    };
+    renderEditView();
+}
+
+    function showProgramDetailView(program) {
+    const container = document.getElementById('mainContent');
+    if(!container) return;
+    
+    let exercisesHtml = '';
+    program.exercises.forEach((ex, idx) => {
+        let imgUrl = ex.image ? `${IMAGE_BASE}${ex.image}` : 'https://placehold.co/400x400/1E2A32/0ABAB5?text=NTC';
+        let targetMuscle = ex.target || 'General';
+        // Gerçek egzersiz verisini bul (level için)
+        const fullExercise = allExercises.find(e => e.id === ex.id);
+        let level = fullExercise ? fullExercise.level : 'beginner';
+        let flameHtml = getFlameIcons(level);
+        
+        exercisesHtml += `
+            <div class="exercise-detail-item" data-ex-id="${ex.id}">
+                <img class="exercise-detail-img" src="${imgUrl}" onerror="this.src='https://placehold.co/400x400/1E2A32/0ABAB5?text=No+Image'">
+                <div class="exercise-detail-info">
+                    <div class="exercise-detail-name">${escapeHtml(ex.name)}</div>
+                    <div class="exercise-detail-muscle"><i class="fas fa-bullseye"></i> ${escapeHtml(targetMuscle)}</div>
+                    <div class="exercise-detail-equipment"><i class="fas fa-chart-simple"></i> <span class="flame-level">${flameHtml}</span></div>
+                </div>
+            </div>
+        `;
+    });
+    
+    const html = `
+        <div class="program-detail-view">
+            <button class="back-button" id="backToMyNTCBtn"><i class="fas fa-arrow-left"></i> Back to My Programs</button>
+            <h2 style="margin-bottom: 24px;">${escapeHtml(program.name)}</h2>
+            <div class="exercises-list">
+                ${exercisesHtml}
+            </div>
+        </div>
+    `;
+    container.innerHTML = html;
+    
+    // Geri butonu
+    document.getElementById('backToMyNTCBtn').addEventListener('click', () => renderMyNTC());
+    
+    // Egzersiz kartlarına tıklama olayı -> popup aç
+    document.querySelectorAll('.exercise-detail-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            // Butonlara tıklamayı engelleme (back button değilse)
+            if(e.target.closest('.back-button')) return;
+            const exId = item.getAttribute('data-ex-id');
+            // Önce program.exercises içinde ara, sonra allExercises
+            let exerciseData = program.exercises.find(e => e.id === exId);
+            if(exerciseData) {
+                // Tam detay için allExercises'ten bul
+                const fullEx = allExercises.find(e => e.id === exId);
+                if(fullEx) {
+                    simpleDetailModal(fullEx);
+                } else {
+                    // Eksik veriyle de olsa bir modal göster
+                    const fakeEx = {
+                        id: exerciseData.id,
+                        name: exerciseData.name,
+                        primaryMuscles: [exerciseData.target],
+                        secondaryMuscles: [],
+                        equipment: 'Body only',
+                        level: 'beginner',
+                        instructions: [],
+                        images: exerciseData.image ? [exerciseData.image] : []
+                    };
+                    simpleDetailModal(fakeEx);
+                }
+            }
+        });
+    });
+}
+
+    /*function openProgramDetail(program) {
+        const backdrop = document.getElementById('backdrop');
+        const modalDiv = document.createElement('div');
+        modalDiv.className = 'program-detail-modal';
+        modalDiv.innerHTML = `
+            <div style="display:flex; justify-content:space-between; margin-bottom:16px;">
+                <h3>${escapeHtml(program.name)}</h3>
+                <i class="fas fa-times" style="cursor:pointer; font-size:1.4rem;" id="closeProgramDetail"></i>
+            </div>
+            <div id="programDetailList" class="program-detail-list"></div>
+            <button id="saveProgramOrderBtn" style="background:#0ABAB5; border:none; padding:12px; border-radius:40px; width:100%; margin-top:16px;">Save Order</button>
+        `;
+        document.body.appendChild(modalDiv);
+        backdrop.classList.add('show');
+        const renderDetailList = () => {
+            const listDiv = document.getElementById('programDetailList');
+            if(!listDiv) return;
+            listDiv.innerHTML = program.exercises.map((ex, idx) => `
+                <div class="detail-item" data-detail-idx="${idx}">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <i class="fas fa-grip-vertical detail-order-handle" style="cursor:grab;"></i>
+                        <span>${escapeHtml(ex.name)}</span>
+                    </div>
+                    <i class="fas fa-trash-alt" style="color:#FF6A5C; cursor:pointer;" data-remove-ex="${idx}"></i>
+                </div>
+            `).join('');
+            // attach remove
+            document.querySelectorAll('[data-remove-ex]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const idx = parseInt(btn.getAttribute('data-remove-ex'));
+                    program.exercises.splice(idx,1);
+                    saveProgramsToLocal();
+                    renderDetailList();
+                    if(program.exercises.length === 0) {
+                        const index = savedPrograms.findIndex(p => p.id === program.id);
+                        if(index !== -1) savedPrograms.splice(index,1);
+                        saveProgramsToLocal();
+                        modalDiv.remove();
+                        backdrop.classList.remove('show');
+                        if(document.querySelector('.nav-link[data-page="myntc"].active')) renderMyNTC();
+                    } else {
+                        renderDetailList();
+                        if(document.querySelector('.nav-link[data-page="myntc"].active')) renderMyNTC();
+                    }
+                });
+            });
+            // drag drop reorder inside modal
+            let dragSrc = null;
+            const items = document.querySelectorAll('.detail-item');
+            items.forEach(item => {
+                item.setAttribute('draggable', 'true');
+                item.addEventListener('dragstart', (e) => { dragSrc = parseInt(item.getAttribute('data-detail-idx')); e.dataTransfer.effectAllowed = 'move'; });
+                item.addEventListener('dragover', (e) => e.preventDefault());
+                item.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    const targetIdx = parseInt(item.getAttribute('data-detail-idx'));
+                    if(dragSrc !== null && dragSrc !== targetIdx) {
+                        const [moved] = program.exercises.splice(dragSrc, 1);
+                        program.exercises.splice(targetIdx, 0, moved);
+                        saveProgramsToLocal();
+                        renderDetailList();
+                    }
+                });
+            });
+        };
+        renderDetailList();
+        document.getElementById('saveProgramOrderBtn').addEventListener('click', () => {
+            saveProgramsToLocal();
+            showToast('Order saved');
+            renderMyNTC();
+            modalDiv.remove();
+            backdrop.classList.remove('show');
+        });
+        document.getElementById('closeProgramDetail')?.addEventListener('click', () => {
+            modalDiv.remove();
+            backdrop.classList.remove('show');
+        });
+    }
+
+    */
+    // Filter and render exercises (Home page)
+    function filterAndSort() {
+        let filtered = [...allExercises];
+        if(currentMuscle !== 'all') filtered = filtered.filter(ex => ex.primaryMuscles && ex.primaryMuscles.map(m=>m.toLowerCase()).includes(currentMuscle.toLowerCase()));
+        if(currentEquipment !== 'all') filtered = filtered.filter(ex => (ex.equipment || 'body only').toLowerCase() === currentEquipment.toLowerCase());
+        if(currentLevel !== 'all') filtered = filtered.filter(ex => ex.level === currentLevel);
+        if(searchTerm.trim()) {
+            const term = searchTerm.toLowerCase();
+            filtered = filtered.filter(ex => ex.name.toLowerCase().includes(term) || (ex.primaryMuscles && ex.primaryMuscles.some(m=>m.toLowerCase().includes(term))) || (ex.equipment && ex.equipment.toLowerCase().includes(term)));
+        }
+        if(sortType === 'name-asc') filtered.sort((a,b)=>a.name.localeCompare(b.name));
+        else filtered.sort((a,b)=>b.name.localeCompare(a.name));
+        return filtered;
+    }
+    function renderHome() {
+        const container = document.getElementById('mainContent');
+        const list = filterAndSort();
+        if(!list.length) { container.innerHTML = `<div class="loading-placeholder">No exercises found. Adjust filters.</div>`; return; }
+        let html = `
+            <div class="hero"><h1>engineered to move</h1><p>1,300+ exercises • manual sliders • build your workout</p></div>
+            <div class="action-bar">
+                <div class="search-wrapper"><i class="fas fa-search"></i><input type="text" id="searchInputHome" class="search-input" placeholder="Search exercise..."></div>
+                <select id="sortSelectHome" class="sort-select"><option value="name-asc">A → Z</option><option value="name-desc">Z → A</option></select>
+            </div>
+            <div class="exercises-grid" id="homeGrid"></div>
+        `;
+        container.innerHTML = html;
+        const grid = document.getElementById('homeGrid');
+        grid.innerHTML = list.map((ex, idx) => {
+            const images = ex.images || [];
+            const sliderId = `slider_${ex.id}_${idx}`;
+            const primaryMuscle = ex.primaryMuscles && ex.primaryMuscles.length ? capitalize(ex.primaryMuscles[0]) : 'General';
+            const equipment = normalizeEquipment(ex.equipment);
+            const level = ex.level || 'beginner';
+            return `
+                <div class="exercise-card" data-id="${ex.id}">
+                    <div class="slider-container" id="${sliderId}">
+                        <div class="slider-images">
+                            ${images.length ? images.map(img => `<img class="slider-img" src="${IMAGE_BASE}${img}" onerror="this.src='https://placehold.co/400x400/1E2A32/0ABAB5?text=NTC'">`).join('') : `<img class="slider-img" src="https://placehold.co/400x400/1E2A32/0ABAB5?text=No+Image">`}
+                        </div>
+                        ${images.length > 1 ? `<button class="slider-btn slider-prev"><i class="fas fa-chevron-left"></i></button><button class="slider-btn slider-next"><i class="fas fa-chevron-right"></i></button>` : ''}
+                    </div>
+                    <div class="card-info">
+                        <div class="exercise-name">${escapeHtml(ex.name)}</div>
+                        <div class="meta-grid">
+                            <div class="meta-item"><i class="fas fa-bullseye"></i> ${escapeHtml(primaryMuscle)}</div>
+                            <div class="meta-item"><i class="fas fa-tools"></i> ${escapeHtml(equipment)}</div>
+                            <div class="meta-item"><i class="fas fa-chart-simple"></i> <span class="flame-level">${getFlameIcons(level)}</span></div>
+                        </div>
+                        <button class="add-queue-btn" data-id="${ex.id}"><i class="fas fa-cart-plus"></i> Add to Queue</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        // init sliders (manual only, no auto)
+        list.forEach((ex, idx) => {
+            const images = ex.images || [];
+            if(images.length > 1) {
+                const sliderId = `slider_${ex.id}_${idx}`;
+                const container = document.getElementById(sliderId);
+                if(container) {
+                    let current = 0;
+                    const sliderDiv = container.querySelector('.slider-images');
+                    const prevBtn = container.querySelector('.slider-prev');
+                    const nextBtn = container.querySelector('.slider-next');
+                    const update = () => { if(sliderDiv) sliderDiv.style.transform = `translateX(-${current * 100}%)`; };
+                    prevBtn?.addEventListener('click', (e) => { e.stopPropagation(); current = (current - 1 + images.length) % images.length; update(); });
+                    nextBtn?.addEventListener('click', (e) => { e.stopPropagation(); current = (current + 1) % images.length; update(); });
+                }
+            }
+        });
+        // add to queue buttons
+        document.querySelectorAll('.add-queue-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const id = btn.getAttribute('data-id');
+                const exercise = allExercises.find(ex => ex.id === id);
+                if(exercise) addToQueue(exercise);
+            });
+        });
+        // card click open modal (simple detail)
+        document.querySelectorAll('.exercise-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                if(e.target.closest('.add-queue-btn') || e.target.closest('.slider-btn')) return;
+                const id = card.getAttribute('data-id');
+                const ex = allExercises.find(e => e.id === id);
+                if(ex) simpleDetailModal(ex);
+            });
+        });
+        // attach search and sort
+        document.getElementById('searchInputHome')?.addEventListener('input', (e) => { searchTerm = e.target.value; renderHome(); });
+        document.getElementById('sortSelectHome')?.addEventListener('change', (e) => { sortType = e.target.value; renderHome(); });
+    }
+    function simpleDetailModal(ex) {
+    const backdrop = document.getElementById('backdrop');
+    const modalDiv = document.createElement('div');
+    modalDiv.className = 'program-detail-modal';
+    const images = ex.images || [];
+    let sliderHtml = `<div class="slider-container" style="margin-bottom:16px;"><div class="slider-images" style="display:flex;">`;
+    images.forEach(img => { sliderHtml += `<img class="slider-img" style="width:100%; flex-shrink:0;" src="${IMAGE_BASE}${img}">`; });
+    sliderHtml += `</div>${images.length>1 ? `<button class="slider-btn slider-prev"><i class="fas fa-chevron-left"></i></button><button class="slider-btn slider-next"><i class="fas fa-chevron-right"></i></button>` : ''}</div>`;
+    modalDiv.innerHTML = `
+        <div style="display:flex; justify-content:space-between;"><h3>${escapeHtml(ex.name)}</h3><i class="fas fa-times" style="cursor:pointer;" id="closeSimpleModal"></i></div>
+        ${sliderHtml}
+        <div class="meta-grid" style="margin:16px 0;">
+            <div class="meta-item">Target: ${escapeHtml(ex.primaryMuscles?.map(capitalize).join(', ') || '-')}</div>
+            <div class="meta-item">Secondary: ${escapeHtml(ex.secondaryMuscles?.map(capitalize).join(', ') || '-')}</div>
+            <div class="meta-item">Equipment: ${normalizeEquipment(ex.equipment)}</div>
+            <div class="meta-item">Level: ${getFlameIcons(ex.level || 'beginner')}</div>
+        </div>
+        <div><strong>Instructions</strong><br>${(ex.instructions || ['No detailed steps']).map(step => `• ${escapeHtml(step)}`).join('<br>')}</div>
+        <button class="add-queue-btn" data-id="${ex.id}" style="margin-top:20px;">Add to Queue</button>
+    `;
+    document.body.appendChild(modalDiv);
+    backdrop.classList.add('show');
+    
+    // Dışarı tıklayınca kapat
+    const closeModal = () => {
+        modalDiv.remove();
+        backdrop.classList.remove('show');
+        backdrop.removeEventListener('click', closeModal);
+    };
+    backdrop.addEventListener('click', closeModal);
+    
+    if(images.length > 1) {
+        let current = 0;
+        const sliderDiv = modalDiv.querySelector('.slider-images');
+        const prev = modalDiv.querySelector('.slider-prev');
+        const next = modalDiv.querySelector('.slider-next');
+        const update = () => { if(sliderDiv) sliderDiv.style.transform = `translateX(-${current*100}%)`; };
+        prev?.addEventListener('click', (e) => { e.stopPropagation(); current = (current-1+images.length)%images.length; update(); });
+        next?.addEventListener('click', (e) => { e.stopPropagation(); current = (current+1)%images.length; update(); });
+    }
+    modalDiv.querySelector('#closeSimpleModal')?.addEventListener('click', closeModal);
+    modalDiv.querySelector('.add-queue-btn')?.addEventListener('click', (e) => { addToQueue(ex); modalDiv.remove(); backdrop.classList.remove('show'); backdrop.removeEventListener('click', closeModal); });
+}
+
+    // Filter chips and sidebar
+    function buildFilterChips() {
+        const muscles = [...new Set(allExercises.flatMap(ex => ex.primaryMuscles || []).map(m=>m.toLowerCase()))].sort();
+        const equipments = [...new Set(allExercises.map(ex => (ex.equipment || 'body only').toLowerCase()))].sort();
+        const levels = ['beginner','intermediate','expert'];
+        const muscleDiv = document.getElementById('muscleChips');
+        if(muscleDiv) {
+            muscleDiv.innerHTML = `<div class="filter-chip ${currentMuscle === 'all' ? 'active' : ''}" data-filter="muscle" data-value="all">All Muscles</div>` + muscles.map(m => `<div class="filter-chip ${currentMuscle === m ? 'active' : ''}" data-filter="muscle" data-value="${m}">${capitalize(m)}</div>`).join('');
+        }
+        const equipDiv = document.getElementById('equipmentChips');
+        if(equipDiv) {
+            equipDiv.innerHTML = `<div class="filter-chip ${currentEquipment === 'all' ? 'active' : ''}" data-filter="equipment" data-value="all">All</div>` + equipments.map(e => `<div class="filter-chip ${currentEquipment === e ? 'active' : ''}" data-filter="equipment" data-value="${e}">${capitalize(e)}</div>`).join('');
+        }
+        const levelDiv = document.getElementById('levelChips');
+        if(levelDiv) {
+            levelDiv.innerHTML = `<div class="filter-chip ${currentLevel === 'all' ? 'active' : ''}" data-filter="level" data-value="all">All</div>` + levels.map(l => `<div class="filter-chip ${currentLevel === l ? 'active' : ''}" data-filter="level" data-value="${l}">${capitalize(l)}</div>`).join('');
+        }
+        document.querySelectorAll('.filter-chip[data-filter]').forEach(chip => {
+            chip.addEventListener('click', () => {
+                const type = chip.getAttribute('data-filter');
+                const val = chip.getAttribute('data-value');
+                if(type === 'muscle') currentMuscle = val;
+                if(type === 'equipment') currentEquipment = val;
+                if(type === 'level') currentLevel = val;
+                buildFilterChips();
+                if(document.querySelector('.nav-link[data-page="home"].active')) renderHome();
+            });
+        });
+    }
+    function resetFilters() { currentMuscle='all'; currentEquipment='all'; currentLevel='all'; searchTerm=''; if(document.getElementById('searchInputHome')) document.getElementById('searchInputHome').value=''; buildFilterChips(); if(document.querySelector('.nav-link[data-page="home"].active')) renderHome(); }
+
+    // Navigation
+    function initNavigation() {
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                const page = link.getAttribute('data-page');
+                if(page === 'home') renderHome();
+                else if(page === 'myntc') renderMyNTC();
+            });
+        });
+    }
+    function showToast(msg) {
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerText = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+    }
+
+    // Load data and init
+async function loadData() {
+    try {
+        const res = await fetch(JSON_URL);
+        if(!res.ok) throw new Error('Network error');
+        allExercises = await res.json();
+        loadSavedPrograms();
+        buildFilterChips();
+        renderHome();
+        initNavigation();
+        // sidebar logic
+        const filterBtn = document.getElementById('filterBtnLeft');
+        const sidebar = document.getElementById('filtersSidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        const closeSide = document.getElementById('closeSidebar');
+        function openSide() { sidebar.classList.add('open'); overlay.classList.add('open'); }
+        function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.remove('open'); }
+        filterBtn.addEventListener('click', openSide);
+        closeSide.addEventListener('click', closeSidebar);
+        overlay.addEventListener('click', closeSidebar);
+        document.getElementById('resetFiltersBtn').addEventListener('click', resetFilters);
+        
+        // cart modal - DÜZELTİLMİŞ VERSİYON (arka plan siyah değil, tıklama engeli yok)
+        const cartBtn = document.getElementById('cartBtn');
+        const cartModal = document.getElementById('cartModal');
+        const closeCart = document.getElementById('closeCartModal');
+        
+        // AÇILIŞ: sadece modal'ı göster, arka plan overlay KALDIR
+        cartBtn.addEventListener('click', () => { 
+            cartModal.classList.add('open'); 
+            renderQueueModal(); 
+        });
+        
+        // ÇARP ILE KAPAT
+        closeCart.addEventListener('click', () => { 
+            cartModal.classList.remove('open'); 
+        });
+        
+        // DIŞARI TIKLAYINCA KAPAT (arka plan olmadan)
+        window.addEventListener('click', (e) => {
+            if (cartModal.classList.contains('open') && 
+                !cartModal.contains(e.target) && 
+                e.target !== cartBtn && 
+                !cartBtn.contains(e.target)) {
+                cartModal.classList.remove('open');
+            }
+        });
+        
+        // ESC TUŞU İLE KAPAT
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && cartModal.classList.contains('open')) {
+                cartModal.classList.remove('open');
+            }
+        });
+        
+        document.getElementById('saveProgramBtn').addEventListener('click', saveCurrentQueueAsProgram);
+        
+        // hide loading
+        setTimeout(() => { document.getElementById('loadingOverlay').style.opacity = '0'; setTimeout(() => document.getElementById('loadingOverlay').style.display = 'none', 500); }, 800);
+    } catch(err) {
+        document.getElementById('mainContent').innerHTML = `<div class="loading-placeholder">Error loading data: ${err.message}</div>`;
+        document.getElementById('loadingOverlay').style.display = 'none';
+    }
+}
+
+    // Create sidebar html dynamically
+    document.body.insertAdjacentHTML('beforeend', `
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+        <div class="filters-sidebar" id="filtersSidebar">
+            <div class="sidebar-header" style="display:flex; justify-content:space-between; margin-bottom:24px;">
+                <h3>Filters</h3><button id="closeSidebar" style="background:none; border:none; color:white; font-size:24px;"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="filter-group"><div class="filter-label"><i class="fas fa-bullseye"></i> Muscle group</div><div class="filter-chips" id="muscleChips"></div></div>
+            <div class="filter-group"><div class="filter-label"><i class="fas fa-tools"></i> Equipment</div><div class="filter-chips" id="equipmentChips"></div></div>
+            <div class="filter-group"><div class="filter-label"><i class="fas fa-chart-line"></i> Level</div><div class="filter-chips" id="levelChips"></div></div>
+            <button class="reset-filters" id="resetFiltersBtn">Reset all filters</button>
+        </div>
+    `);
+    loadData();
+</script>
+</body>
+</html>
